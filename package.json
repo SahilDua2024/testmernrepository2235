@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "axios": "^1.7.9",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
@@ -11,8 +10,10 @@
     "mongoose": "^8.9.4"
   },
   "scripts": {
-    "start": "node server.js"
-  },
+  "start": "node server.js",
+  "postinstall": "npm install"
+}
+,
   "name": "server",
   "version": "1.0.0",
   "main": "server.js",
@@ -22,5 +23,9 @@
   "description": "",
   "devDependencies": {
     "nodemon": "^3.1.9"
-  }
+  },
+  "engines": {
+  "node": "18.x"
+}
+
 }
