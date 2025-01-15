@@ -10,9 +10,9 @@
     "mongoose": "^8.9.4"
   },
   "scripts": {
-  "start": "node server.js"
-  }
-,
+    "start": "node server.js",
+    "build": "npm install"
+  },
   "name": "server",
   "version": "1.0.0",
   "main": "server.js",
@@ -24,7 +24,6 @@
     "nodemon": "^3.1.9"
   },
   "engines": {
-  "node": "18.x"
-}
-
+    "node": "18.x"
+  }
 }
