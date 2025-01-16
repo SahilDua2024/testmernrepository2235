@@ -15,6 +15,14 @@ app.use(express.json());
 app.get('/ping', (req, res) => {
     res.json({ message: 'Server is up and running' });
 });
+app.get('/test-db', async (req, res) => {
+    try {
+        const testConnection = await mongoose.connection.db.command({ ping: 1 });
+        res.json(testConnection);
+    } catch (error) {
+        res.status(500).json({ message: 'Database connection failed', error });
+    }
+});
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
