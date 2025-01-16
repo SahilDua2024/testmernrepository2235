@@ -12,6 +12,9 @@ app.use(cors({
     credentials: true, // Include credentials if needed (e.g., cookies)
 }));
 app.use(express.json());
+app.get('/ping', (req, res) => {
+    res.json({ message: 'Server is up and running' });
+});
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
