@@ -1,11 +1,18 @@
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const Chat = require('../models/Chat'); // Import Chat model
 const User = require('../models/User');
 const router = express.Router();
-
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OpenAI = require('openai');
+const key = process.env.OPENAI_API_KEY;
+console.log(key);
+// Initialize OpenAI client
+const openai = new OpenAI({
+    apiKey:key, // Use environment variable
+});
+//console.log('OpenAI API Key:', process.env.OPENAI_API_KEY);
 
 // Middleware to authenticate JWT token
 const authenticate = (req, res, next) => {
@@ -25,35 +32,37 @@ const authenticate = (req, res, next) => {
 // Chatbot route (stores chats in DB)
 // Chatbot route (dummy response logic)
    router.post('/chatbot', authenticate, async (req, res) => {
-    const { userInput } = req.body;
+    const { message } = req.body;
     const { userId } = req.user; // Get authenticated user's ID
+    //const { message } = req.body;
+    console.log(req.body);
+    if (!message) {
+        return res.status(400).json({ error: 'Message is required' });
+    }
 
     try {
-        // Normalize input to lowercase for better matching
-        const normalizedInput = userInput.trim().toLowerCase();
-
-        // Dummy chatbot responses
-        const dummyResponses = {
-            hello: 'Hi there!',
-            hi: 'Hello! How can I help you?',
-            how: 'I am just a bot, but I am doing great!',
-            bye: 'Goodbye! Have a great day!',
-        };
-
-        // Generate a response based on the user's input
-        const botResponse = dummyResponses[normalizedInput] || 'Sorry, I did not understand that.';
-
-        // Save the chat conversation in the database
-        const chat = new Chat({
-            userId,               // Authenticated user's ID
-            userMessage: userInput, // User's input from the frontend
-            botResponse,          // Dummy response
+        const response = await openai.chat.completions.create({
+            model: "gpt-4o", // Specify model
+            messages: [ { role: "system", content: "You are a helpful tutor who explains tax refund concepts." },
+              { role: "user", content: message},], // User's message
+            temperature: 1,
+            max_tokens: 2048,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
         });
 
+        // Extract and return the chatbot's reply
+        const reply = response.choices[0].message.content;
+        const chat = new Chat({
+            userId,               // Authenticated user's ID
+            userMessage: message, // User's input from the fro
+            botResponse: reply
+        });
         await chat.save();
-
-        // Send the bot response back to the user
-        res.json({ response: botResponse });
+        res.json({ reply });
+        console.log(reply);
+    
     } catch (error) {
         console.error('Error in chatbot route:', error);
         res.status(500).json({ error: 'Failed to process chatbot message' });
