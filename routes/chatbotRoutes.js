@@ -10,8 +10,9 @@ const key = process.env.OPENAI_API_KEY;
 console.log(key);
 // Initialize OpenAI client
 const openai = new OpenAI({
-    apiKey:key, // Use environment variable
+    apiKey: process.env.OPENAI_API_KEY?.trim(), // Trim to remove unnecessary spaces or newlines
 });
+
 //console.log('OpenAI API Key:', process.env.OPENAI_API_KEY);
 
 // Middleware to authenticate JWT token
