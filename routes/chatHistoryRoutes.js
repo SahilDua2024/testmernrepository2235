@@ -30,7 +30,7 @@ router.get('/chatbot/history', authenticate, async (req, res) => {
 
     try {
         const chats = await Chat.find({userId});
-        console.log('Chats:', chats);
+        console.log('Chats now tested in chat history route: ', chats);
         res.json(chats);
     } catch (error) {
         console.error('Chat History Error:', error);
