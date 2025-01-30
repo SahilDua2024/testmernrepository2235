@@ -62,7 +62,7 @@ const authenticate = (req, res, next) => {
             botResponse: reply
         });
         await chat.save();
-        reply = cleanResponse;
+     //reply = cleanResponse;
         res.json({reply});
         console.log(reply);
     
