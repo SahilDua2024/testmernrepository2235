@@ -62,6 +62,7 @@ const authenticate = (req, res, next) => {
             botResponse: cleanResponse
         });
         await chat.save();
+        reply = cleanResponse;
         res.json({ cleanResponse });
         console.log(cleanResponse);
     
