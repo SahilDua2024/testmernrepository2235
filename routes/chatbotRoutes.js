@@ -55,14 +55,15 @@ const authenticate = (req, res, next) => {
 
         // Extract and return the chatbot's reply
         const reply = response.choices[0].message.content;
+        const cleanResponse = reply.replace(/[^a-zA-Z0-9 .,!?]/g, ""); 
         const chat = new Chat({
             userId,               // Authenticated user's ID
             userMessage: message, // User's input from the fro
-            botResponse: reply
+            botResponse: cleanResponse
         });
         await chat.save();
-        res.json({ reply });
-        console.log(reply);
+        res.json({ cleanResponse });
+        console.log(cleanResponse);
     
     } catch (error) {
         console.error('Error in chatbot route:', error);
